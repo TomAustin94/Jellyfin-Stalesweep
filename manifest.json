@@ -12,7 +12,7 @@
         "changelog": "Initial release for Jellyfin 10.11.x compatibility.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://github.com/TomAustin94/Jellyfin-Stalesweep/releases/latest/download/StaleSweep.zip",
-        "checksum": ""
+        "checksum": "a77bad0e861f269320ad0f05c4d24553f3208161063df83b1824ba4af7417441"
       }
     ]
   }
