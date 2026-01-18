@@ -1,0 +1,25 @@
+Technical Specification: "Stale Sweep" Jellyfin Plugin
+1. Project OverviewThe Stale Sweep plugin provides an automated way to clean up Jellyfin libraries. It targets media files that are both "old" (based on file creation/addition date) and "unwatched," helping server administrators reclaim disk space from content that was added but never consumed.
+2. Functional Requirements
+2.1 Library SelectionTargeting: The admin must be able to select specific libraries (e.g., "Movies," "Documentaries") for the plugin to monitor.Exclusion: A "Dry Run" mode must be available to log what would be deleted without actually removing files.
+2.2 Identification LogicThe plugin will flag items for deletion based on the following boolean logic:Age Threshold: File must have been added to the library in the last 365$ days ago.Watch Status (Movies): The Played status must be False.Watch Status (TV Shows): If a series contains even one unwatched episode, the entire series (or specific season, depending on user config) is flagged.Note: Standard configuration will target the specific unwatched files rather than the whole show to prevent accidental data loss.2.3 Execution & SchedulingScheduled Task: The plugin will register as a "Scheduled Task" within the Jellyfin Dashboard.Deletion: Files will be deleted directly from the filesystem.3. Technical Architecture3.1 DependenciesLanguage: C# (.NET 6.0 or 8.0 depending on Jellyfin target version).APIs: ILibraryManager, IUserManager, and IFileSystem.3.2 Data FlowComponentResponsibilityPlugin ConfigurationStores library IDs and age threshold (default 365 days).Scanner EngineQueries the ItemRepository for items matching age/watched criteria.File HandlerExecutes System.IO.Delete calls and refreshes the library metadata.
+
+4. User Interface (Admin Dashboard)
+The configuration page will require the following inputs:
+
+Library Checklist: Multi-select list of all detected Jellyfin libraries.
+
+Age Limit (Days): Numerical input (defaulting to 365).
+
+Action Mode: Toggle between "Log Only (Dry Run)" and "Delete Files."
+
+TV Logic: Toggle between "Delete individual episodes" or "Delete entire season if any episode is unwatched."
+
+5. Security & Safety Constraints
+[!WARNING] Data Loss Risk: Because this plugin performs permanent file deletion, the following safeguards are mandatory:
+
+Admin-Only: Only users with administrative privileges can configure or run the task.
+
+Logging: Every deletion must be logged with a timestamp, file path, and the reason (e.g., "Unwatched for 400 days").
+
+Metadata Protection: The plugin should trigger a library scan post-deletion to ensure the Jellyfin database stays in sync with the filesystem.

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Update to match your Jellyfin server version -->
+    <JellyfinVersion>10.11.5</JellyfinVersion>
+  </PropertyGroup>
+</Project>

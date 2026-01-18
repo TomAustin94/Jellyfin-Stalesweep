@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stale Sweep</title>
+  </head>
+  <body>
+    <div
+      id="staleSweepConfigPage"
+      data-role="page"
+      class="page type-interior pluginConfigurationPage"
+      data-controller="__plugin/stalesweep"
+      data-require="emby-input,emby-button,emby-checkbox,emby-select"
+    >
+      <div data-role="content">
+        <div class="content-primary">
+          <form id="staleSweepConfigForm">
+            <h1>Stale Sweep</h1>
+
+            <div class="fieldDescription">
+              Deletes <b>old + unwatched</b> items from selected libraries. Default is <b>Dry Run</b>.
+            </div>
+
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="ageLimitDays">Age limit (days)</label>
+              <input id="ageLimitDays" type="number" min="0" step="1" required class="emby-input" />
+              <div class="fieldDescription">Items older than this threshold are eligible.</div>
+            </div>
+
+            <div class="checkboxContainer">
+              <label>
+                <input id="dryRun" type="checkbox" is="emby-checkbox" />
+                <span>Log only (Dry Run)</span>
+              </label>
+            </div>
+
+            <div class="selectContainer">
+              <label class="selectLabel" for="tvMode">TV logic</label>
+              <select id="tvMode" is="emby-select" class="emby-select">
+                <option value="0">Delete individual episodes (recommended)</option>
+                <option value="1">Delete entire season if any episode is unwatched</option>
+              </select>
+            </div>
+
+            <h2>Libraries</h2>
+            <div id="libraries" class="paperList"></div>
+
+            <div class="formDialogFooter">
+              <button is="emby-button" type="submit" class="raised button-submit block">
+                <span>Save</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <script src="configPage.js"></script>
+    </div>
+  </body>
+</html>
