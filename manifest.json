@@ -1,0 +1,18 @@
+[
+  {
+    "guid": "6e4050cf-1ce9-4f9d-aed1-cc36cbe5d2ef",
+    "name": "Stale Sweep",
+    "description": "Deletes unwatched files older than 1 year.",
+    "owner": "TomAustin94",
+    "category": "Maintenance",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Initial release",
+        "targetAbi": "10.9.0.0",
+        "sourceUrl": "https://github.com/TomAustin94/Jellyfin-Stalesweep/releases/latest/download/StaleSweep.zip",
+        "checksum": ""
+      }
+    ]
+  }
+]
