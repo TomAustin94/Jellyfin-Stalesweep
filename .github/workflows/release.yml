@@ -4,23 +4,26 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout tag
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          fetch-depth: 0 # Necessary to push changes back to the repo
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x' # Match your Jellyfin target version
+          dotnet-version: '8.0.x' # Use 8.0 for Jellyfin 10.11 compatibility
 
       - name: Build Plugin
+        # Corrected the path to your .csproj based on your previous logs
         run: dotnet publish ./src/Jellyfin.Plugin.StaleSweep/Jellyfin.Plugin.StaleSweep.csproj -c Release -o ./publish --ignore-failed-sources
 
       - name: Zip Plugin
@@ -30,23 +33,27 @@ jobs:
         id: artifact_hash
         run: echo "sha256=$(sha256sum StaleSweep.zip | awk '{ print $1 }')" >> "$GITHUB_OUTPUT"
 
-      - name: Upload to Release
+      - name: Upload or Create Release
         uses: softprops/action-gh-release@v1
         with:
+          # Use the release tag if it exists; otherwise, create a manual tag
+          tag_name: ${{ github.event.release.tag_name || format('manual-{0}', github.run_number) }}
           files: StaleSweep.zip
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # This step calculates the hash and updates manifest.json
       - name: Update Manifest
         run: |
-          git fetch --prune --unshallow || true
-          git fetch origin "${{ github.event.repository.default_branch }}"
-          git checkout "${{ github.event.repository.default_branch }}"
+          # Calculate hash and update manifest.json
           sed -i "s/\"checksum\": \".*\"/\"checksum\": \"${{ steps.artifact_hash.outputs.sha256 }}\"/" manifest.json
+          
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add manifest.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Update manifest checksum for ${{ github.event.release.tag_name }}"
-          git push origin "HEAD:${{ github.event.repository.default_branch }}"
+          
+          # Only commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "Update manifest checksum [skip ci]"
+            git push origin HEAD:${{ github.event.repository.default_branch }}
+          fi
