@@ -2,12 +2,10 @@ using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
 using MediaBrowser.Model.Serialization;
-using Microsoft.Extensions.DependencyInjection;
-using Jellyfin.Plugin.StaleSweep.Services;
 
 namespace Jellyfin.Plugin.StaleSweep;
 
-public sealed class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages, IPluginServiceRegistrator
+public sealed class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
 {
     public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer)
         : base(applicationPaths, xmlSerializer)
@@ -43,10 +41,5 @@ public sealed class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages, IPlu
             Name = "configPage.js",
             EmbeddedResourcePath = $"{ns}.Resources.configPage.js",
         };
-    }
-
-    public void RegisterServices(IServiceCollection services)
-    {
-        services.AddSingleton<StaleSweepService>();
     }
 }

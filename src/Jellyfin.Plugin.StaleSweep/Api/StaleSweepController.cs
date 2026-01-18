@@ -1,4 +1,6 @@
 using System.Globalization;
+using Jellyfin.Data.Enums;
+using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +27,7 @@ public sealed class StaleSweepController : ControllerBase
             .GetItemList(new InternalItemsQuery
             {
                 Recursive = false,
-                IncludeItemTypes = new[] { "CollectionFolder" },
+                IncludeItemTypes = new[] { BaseItemKind.CollectionFolder },
             })
             .Select(i => new LibraryDto
             {

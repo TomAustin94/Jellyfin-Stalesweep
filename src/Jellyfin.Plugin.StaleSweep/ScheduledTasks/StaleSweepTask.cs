@@ -27,7 +27,7 @@ public sealed class StaleSweepTask : IScheduledTask
     {
         yield return new TaskTriggerInfo
         {
-            Type = TaskTriggerInfo.TriggerInterval,
+            Type = TaskTriggerInfoType.IntervalTrigger,
             IntervalTicks = TimeSpan.FromDays(1).Ticks,
         };
     }
@@ -45,4 +45,3 @@ public sealed class StaleSweepTask : IScheduledTask
         }
     }
 }
-

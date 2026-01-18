@@ -1,3 +1,5 @@
+using JellyfinUser = Jellyfin.Database.Implementations.Entities.User;
+using Jellyfin.Data.Enums;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
@@ -79,7 +81,7 @@ public sealed class StaleSweepService
             {
                 ParentId = libraryId,
                 Recursive = true,
-                IncludeItemTypes = new[] { "Movie", "Episode", "Season" },
+                IncludeItemTypes = new[] { BaseItemKind.Movie, BaseItemKind.Episode, BaseItemKind.Season },
                 IsVirtualItem = false,
             });
 
@@ -144,7 +146,7 @@ public sealed class StaleSweepService
         await Task.CompletedTask.ConfigureAwait(false);
     }
 
-    private bool IsUnplayedByAllUsers(BaseItem item, IReadOnlyList<MediaBrowser.Controller.Entities.User> users)
+    private bool IsUnplayedByAllUsers(BaseItem item, IReadOnlyList<JellyfinUser> users)
     {
         foreach (var user in users)
         {
@@ -160,7 +162,7 @@ public sealed class StaleSweepService
 
     private bool TryDeleteSeason(
         Season season,
-        IReadOnlyList<MediaBrowser.Controller.Entities.User> users,
+        IReadOnlyList<JellyfinUser> users,
         DateTime cutoff,
         bool dryRun,
         int ageLimitDays,
@@ -173,7 +175,7 @@ public sealed class StaleSweepService
             {
                 ParentId = season.Id,
                 Recursive = true,
-                IncludeItemTypes = new[] { "Episode" },
+                IncludeItemTypes = new[] { BaseItemKind.Episode },
                 IsVirtualItem = false,
             })
             .OfType<Episode>()
@@ -228,7 +230,7 @@ public sealed class StaleSweepService
 
             if (_fileSystem.DirectoryExists(path))
             {
-                _fileSystem.DeleteDirectory(path, true);
+                Directory.Delete(path, true);
                 _logger.LogWarning("Stale Sweep: deleted directory '{Path}' Reason={Reason}", path, reason);
                 deletedPaths = 1;
                 return true;

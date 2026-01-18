@@ -21,7 +21,7 @@ jobs:
           dotnet-version: '9.0.x' # Match your Jellyfin target version
 
       - name: Build Plugin
-        run: dotnet publish -c Release -o ./publish --ignore-failed-sources
+        run: dotnet publish ./src/Jellyfin.Plugin.StaleSweep/Jellyfin.Plugin.StaleSweep.csproj -c Release -o ./publish --ignore-failed-sources
 
       - name: Zip Plugin
         run: zip -rj StaleSweep.zip ./publish/*
