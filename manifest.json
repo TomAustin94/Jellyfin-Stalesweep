@@ -2,14 +2,15 @@
   {
     "guid": "6e4050cf-1ce9-4f9d-aed1-cc36cbe5d2ef",
     "name": "Stale Sweep",
-    "description": "Deletes unwatched files older than 1 year.",
+    "description": "Automatically deletes media files that are older than one year and remain unwatched.",
+    "overview": "Reclaim storage space by targeting stale content. This plugin scans your selected libraries for movies and TV episodes that haven't been played within 365 days of being added to your server.",
     "owner": "TomAustin94",
     "category": "Maintenance",
     "versions": [
       {
         "version": "1.0.0.0",
-        "changelog": "Initial release",
-        "targetAbi": "10.9.0.0",
+        "changelog": "Initial release for Jellyfin 10.11.x",
+        "targetAbi": "10.11.0.0",
         "sourceUrl": "https://github.com/TomAustin94/Jellyfin-Stalesweep/releases/latest/download/StaleSweep.zip",
         "checksum": ""
       }
