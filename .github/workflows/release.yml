@@ -1,0 +1,40 @@
+name: Build and Release Plugin
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x' # Match your Jellyfin target version
+
+      - name: Build Plugin
+        run: dotnet publish -c Release -o ./publish
+
+      - name: Zip Plugin
+        run: zip -rj StaleSweep.zip ./publish/*
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: StaleSweep.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # This step calculates the hash and updates manifest.json
+      - name: Update Manifest
+        run: |
+          SHA256=$(sha256sum StaleSweep.zip | awk '{ print $1 }')
+          sed -i "s/\"checksum\": \".*\"/\"checksum\": \"$SHA256\"/" manifest.json
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add manifest.json
+          git commit -m "Update manifest checksum for ${{ github.event.release.tag_name }}"
+          git push
