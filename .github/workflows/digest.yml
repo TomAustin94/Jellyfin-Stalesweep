@@ -23,7 +23,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -r jellyfin-digest/requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run digest script
         env:
@@ -33,4 +33,4 @@ jobs:
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
-        run: python jellyfin-digest/digest.py
+        run: python digest.py
